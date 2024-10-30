@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: 2024 Datavolo Inc.
+#
+# SPDX-License-Identifier: Apache-2.0
+name: 'Datavolo NiFi Flow Diff'
+description: 'Perform a diff between two versions of a flow'
+inputs:
+  flowA:
+    description: 'Original Flow'
+    required: true
+  flowB:
+    description: 'New Version of the Flow'
+    required: true
+  token:
+    description: 'GITHUB_TOKEN or a repository-scoped PAT'
+    default: ${{ github.token }}
+    required: true
+  repository:
+    description: 'The full name of the repository in which to create or update a comment'
+    default: ${{ github.repository }}
+    required: true
+  issuenumber:
+    description: 'The number of the issue or pull request in which to create a comment'
+    required: true
+    default: ${{ github.event.number }}
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.flowA }}
+    - ${{ inputs.flowB }}
+    - ${{ inputs.token }}
+    - ${{ inputs.repository }}
+    - ${{ inputs.issuenumber }}

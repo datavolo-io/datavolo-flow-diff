@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-java-21:
+    runs-on: ubuntu-latest
+    name: Java 21
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v4
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+          cache: 'maven'
+      - name: Build
+        working-directory: flow-diff
+        run: mvn --batch-mode package

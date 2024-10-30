@@ -1,0 +1,119 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.datavolo.nifi</groupId>
+    <artifactId>flow-diff</artifactId>
+    <version>0.0.1</version>
+
+    <name>Datavolo Flow Diff GitHub Action</name>
+    <description>
+      GitHub Action so that whenever a pull request is opened, reopened or when a new commit is
+      pushed to an existing pull request, a workflow will be triggered and will compare the
+      modified flow in the pull request and will automatically comment the pull request with a
+      human-readable description of the changes included in the pull request.
+    </description>
+    <url>https://github.com/datavolo-io/datavolo-flow-diff</url>
+    <inceptionYear>2024</inceptionYear>
+    <organization>
+        <name>Datavolo</name>
+        <url>https://datavolo.io/</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+ 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+        <nifi-api.version>2.0.0</nifi-api.version>
+        <nifi-framework.version>2.0.0-M4</nifi-framework.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <jackson.version>2.18.0</jackson.version>
+        <junit.version>5.11.3</junit.version>
+    </properties>
+ 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.nifi</groupId>
+            <artifactId>nifi-api</artifactId>
+            <version>${nifi-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.nifi</groupId>
+            <artifactId>nifi-framework-core-api</artifactId>
+            <version>${nifi-framework.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.nifi</groupId>
+                    <artifactId>nifi-site-to-site-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.nifi</groupId>
+                    <artifactId>nifi-expression-language</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.nifi.registry</groupId>
+            <artifactId>nifi-registry-flow-diff</artifactId>
+            <version>${nifi-framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>io.datavolo.nifi.FlowDiff</mainClass>
+                                </transformer>
+                            </transformers>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
