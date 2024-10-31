@@ -1,8 +1,12 @@
 # SPDX-FileCopyrightText: 2024 Datavolo Inc.
 #
 # SPDX-License-Identifier: Apache-2.0
-name: 'Datavolo NiFi Flow Diff'
-description: 'Perform a diff between two versions of a flow'
+name: 'Datavolo Flow Diff'
+description: 'Compare differences in Apache NiFi Flow Definitions'
+author: Datavolo
+branding:
+  icon: columns
+  color: blue
 inputs:
   flowA:
     description: 'Original Flow'
