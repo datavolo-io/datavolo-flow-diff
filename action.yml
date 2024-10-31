@@ -5,7 +5,7 @@ name: 'Datavolo Flow Diff'
 description: 'Compare differences in Apache NiFi Flow Definitions'
 author: Datavolo
 branding:
-  icon: columns
+  icon: git-pull-request
   color: blue
 inputs:
   flowA:
