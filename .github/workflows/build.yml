@@ -24,6 +24,8 @@ jobs:
           java-version: '21'
           distribution: 'zulu'
           cache: 'maven'
-      - name: Build
+      - name: Maven Package
         working-directory: flow-diff
         run: mvn --batch-mode package
+      - name: Docker Build
+        run: docker build --tag flow-diff .
