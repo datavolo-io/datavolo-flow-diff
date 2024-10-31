@@ -45,7 +45,7 @@ jobs:
 
       # Running the diff
       - name: Datavolo Flow Diff
-        uses: datavolo-io/datavolo-flow-diff@v1
+        uses: datavolo-io/datavolo-flow-diff@v0
         id: flowdiff
         with:
           flowA: 'original-code/${{ steps.files.outputs.all }}'
