@@ -326,6 +326,7 @@ public class FlowDiff {
                         + (isEmpty(connection.getName()) ? connection.getSelectedRelationships().toString() : connection.getName())
                         + "` from `" + connection.getSource().getName() + "` to `" + connection.getDestination().getName()
                         + "` have been changed");
+                break;
             default:
                 System.out.println("- " + diff.getDescription() + " (" + diff.getDifferenceType() + ")");
                 System.out.println("  - " + diff.getValueA());
