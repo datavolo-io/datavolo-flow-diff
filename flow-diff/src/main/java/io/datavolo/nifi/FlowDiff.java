@@ -8,10 +8,13 @@ package io.datavolo.nifi;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.Function;
 
 import org.apache.nifi.flow.ConnectableComponent;
@@ -40,7 +43,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class FlowDiff {
-    
+
     private static String flowName;
     private static Map<String, VersionedParameterContext> parameterContexts;
 
@@ -48,7 +51,7 @@ public class FlowDiff {
 
         String pathA = args[0];
         String pathB = args[1];
-        
+
         final Set<FlowDifference> diffs = getDiff(pathA, pathB);
 
         System.out.println("> [!NOTE]");
@@ -78,13 +81,13 @@ public class FlowDiff {
                     final VersionedProcessor proc = (VersionedProcessor) diff.getComponentB();
                     System.out.println("- A Processor"
                             + (isEmpty(diff.getComponentB().getName()) ? "" : " `" + diff.getComponentB().getName() + "`")
-                            + " has been added with the below configuration");
+                            + " has been added with the configuration [" + printProcessorConf(proc) + "] and the below properties:");
                     printProcessorProperties(proc);
                 } else if (diff.getComponentB().getComponentType().equals(ComponentType.CONTROLLER_SERVICE)) {
                     final VersionedControllerService cs = (VersionedControllerService) diff.getComponentB();
                     System.out.println("- A Controller Service"
                             + (isEmpty(diff.getComponentB().getName()) ? "" : " `" + diff.getComponentB().getName() + "`")
-                            + " has been added with the below configuration");
+                            + " has been added with the below properties:");
                     printControllerProperties(cs);
                 } else {
                     System.out.println("- A " + diff.getComponentB().getComponentType().getTypeName()
@@ -321,7 +324,7 @@ public class FlowDiff {
                 + diff.getValueA() + "`" + " to `" + diff.getValueB() + "`");
                 break;
             case BENDPOINTS_CHANGED:
-            	final VersionedConnection connection = (VersionedConnection) diff.getComponentA();
+                final VersionedConnection connection = (VersionedConnection) diff.getComponentA();
                 System.out.println("- The bending points for the connection `"
                         + (isEmpty(connection.getName()) ? connection.getSelectedRelationships().toString() : connection.getName())
                         + "` from `" + connection.getSource().getName() + "` to `" + connection.getDestination().getName()
@@ -380,11 +383,21 @@ public class FlowDiff {
                 VersionedComponent::getIdentifier,
                 FlowComparatorVersionedStrategy.DEEP
             );
-        
+
         flowName = snapshotA.getFlowSnapshot().getFlow().getName();
         parameterContexts = snapshotB.getFlowSnapshot().getParameterContexts();
 
-        return flowComparator.compare().getDifferences();
+        final SortedSet<FlowDifference> sortedDiffs = new TreeSet(new Comparator<FlowDifference>() {
+            @Override
+            public int compare(FlowDifference o1, FlowDifference o2) {
+                String id1 = o1.getComponentA() == null ? String.valueOf(o1.hashCode()) : o1.getComponentA().getInstanceIdentifier() + o1.hashCode();
+                String id2 = o2.getComponentA() == null ? String.valueOf(o2.hashCode()) : o2.getComponentA().getInstanceIdentifier() + o2.hashCode();
+                return (id1 == null ? String.valueOf(o1.hashCode()) : id1).compareTo(id2 == null ? String.valueOf(o2.hashCode()) : id2);
+            }
+        });
+        sortedDiffs.addAll(flowComparator.compare().getDifferences());
+
+        return sortedDiffs;
     }
 
     static FlowSnapshotContainer getFlowContainer(final String path, final JsonFactory factory) throws IOException {
@@ -411,6 +424,13 @@ public class FlowDiff {
         for (String key : proc.getProperties().keySet()) {
             System.out.println("  - `" + key + "` = `" + proc.getProperties().get(key) + "`");
         }
+    }
+
+    static String printProcessorConf(final VersionedProcessor proc) {
+        return "`" + proc.getExecutionNode() + "` nodes, `" + proc.getConcurrentlySchedulableTaskCount() + "` concurrent tasks, `"
+                + proc.getRunDurationMillis() + "ms` run duration, `" + proc.getBulletinLevel() + "` bulletin level, `"
+                + proc.getSchedulingStrategy() + "` (`" + proc.getSchedulingPeriod() + "`), `"
+                + proc.getPenaltyDuration() + "` penalty duration, `" + proc.getYieldDuration() + "` yield duration";
     }
 
     static void printControllerProperties(final VersionedControllerService cs) {
