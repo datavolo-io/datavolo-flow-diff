@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-java -jar /flow-diff-0.0.1.jar $1 $2 >> /github/workspace/diff.txt
+java -jar /flow-diff.jar $1 $2 >> /github/workspace/diff.txt
 
 OUTPUT=$(cat /github/workspace/diff.txt | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
 

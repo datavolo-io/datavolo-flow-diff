@@ -9,6 +9,6 @@ RUN mvn -f /flow-diff/pom.xml clean package
 FROM eclipse-temurin:21-jre-noble
 
 COPY entrypoint.sh /entrypoint.sh
-COPY --from=builder /flow-diff/target/flow-diff-0.0.1.jar /flow-diff-0.0.1.jar
+COPY --from=builder /flow-diff/target/flow-diff.jar /flow-diff.jar
 
 ENTRYPOINT ["/entrypoint.sh"]

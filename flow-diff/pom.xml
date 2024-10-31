@@ -3,7 +3,7 @@
 
     <groupId>io.datavolo.nifi</groupId>
     <artifactId>flow-diff</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <name>Datavolo Flow Diff GitHub Action</name>
     <description>
@@ -87,6 +87,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
