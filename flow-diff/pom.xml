@@ -30,7 +30,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <nifi-api.version>2.0.0</nifi-api.version>
-        <nifi-framework.version>2.0.0-M4</nifi-framework.version>
+        <nifi-framework.version>2.0.0</nifi-framework.version>
         <slf4j.version>2.0.16</slf4j.version>
         <jackson.version>2.18.0</jackson.version>
         <junit.version>5.11.3</junit.version>
