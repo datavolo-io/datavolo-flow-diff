@@ -1,3 +1,12 @@
+# [Snowflake acquired Datavolo](https://www.snowflake.com/en/engineering-blog/snowflake-datavolo-multimodal-data-integration-platform/)
+## This Github Action is now available at [Snowflake-Labs/snowflake-flow-diff](https://github.com/Snowflake-Labs/snowflake-flow-diff) with significant improvements and new features.
+
+#### -
+#### -
+#### -
+#### -
+#### -
+
 # ![datavolo.io](https://docs.datavolo.io/img/logo-without-name.svg) Datavolo Flow Diff for Apache NiFi
 
 This action is brought to you by [Datavolo](https://datavolo.io/), don't hesitate to visit our website and reach out to us!
